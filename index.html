@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link href="index.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <h1>SUDOKU</h1>
+    <button id="newSudokuButton" class="SudokuControls">Generate Sudoku</button>
+    <button id="solveSudokuButton" class="SudokuControls">Solve Sudoku</button>
+    <button id="submitSudokuButton" class="SudokuControls">
+      Submit Sudoku
+    </button>
+    <table id="sudokuContainer"></table>
+    <script>
+      const newSudokuButton = document.querySelector("#newSudokuButton");
+      const solveSudokuButton = document.querySelector("#solveSudokuButton");
+      const submitSudokuButton = document.querySelector("#submitSudokuButton");
+      const grid = document.querySelector("#sudokuContainer");
+
+      const sideLength = 9;
+      const totalSquares = sideLength * sideLength;
+      const squareLength = 60;
+      const userGrid = [];
+      const numberMatrix = [];
+      const numberOfInitialNumbers = 30;
+      const gridSectionsGap = 10;
+
+      initialiseNumberMatrix(-1);
+      initialiseGrid();
+      mapNumberMatrixToUserGrid();
+
+      newSudokuButton.onclick = () => {
+        resetMatrix(-1);
+        generateSudoku(numberOfInitialNumbers);
+
+        resetGridBackgroundColor();
+
+        for (let i = 0; i < sideLength; i++) {
+          for (let j = 0; j < sideLength; j++) {
+            if (numberMatrix[i][j] !== -1) {
+              userGrid[i][j].style.backgroundColor = "#ff5151";
+            }
+          }
+        }
+
+        mapNumberMatrixToUserGrid();
+      };
+      solveSudokuButton.onclick = () => {
+        solveSudoku();
+        mapNumberMatrixToUserGrid();
+      };
+      // submitSudokuButton.onclick = () => {
+      //   if (!checkForValidInputTypes()) {
+      //     alert("Invalid input type in soduku puzzle (not a digit)");
+      //     return;
+      //   }
+      //   //must map inputs onto number matrix !!!
+
+      //   const invalidRows = [];
+      //   const invalidColumns = [];
+
+      //   for (let i = 0; i < sideLength; i++) {
+      //     for (let j = 0; j < sideLength; j++) {
+      //       const rowValid = checkRowValid(i);
+      //       const columnValid = checkColumnValid(j);
+      //       if (!rowValid) {
+      //         invalidRows.push(i);
+      //       }
+      //       if (!columnValid) {
+      //         invalidColumns.push(j);
+      //       }
+      //     }
+      //   }
+      //   //finally check if soduku is valid
+      //   if (invalidColumns.length === 0 && invalidRows.length === 0) {
+      //     alert("sudoku is valid");
+      //   } else {
+      //     alert("sudoku is not valid");
+      //   }
+      //   function checkRowValid(row) {
+      //     const usedNumbers = [];
+      //     for (let i = 0; i < sideLength; i++) {
+      //       const currentNumber = numberMatrix[row][i];
+      //       if (usedNumbers.includes(currentNumber)) {
+      //         return false;
+      //       }
+      //       usedNumbers.push(currentNumber);
+      //     }
+      //     return true;
+      //   }
+      //   function checkColumnValid(column) {
+      //     const usedNumbers = [];
+      //     for (let i = 0; i < sideLength; i++) {
+      //       const currentNumber = numberMatrix[i][column];
+      //       if (usedNumbers.includes(currentNumber)) {
+      //         return false;
+      //       }
+      //       usedNumbers.push(currentNumber);
+      //     }
+      //     return true;
+      //   }
+
+      //   function checkForValidInputTypes() {
+      //     for (let i = 0; i < sideLength; i++) {
+      //       for (let j = 0; j < sideLength; j++) {
+      //         if (typeof userGrid[i][j].value != typeof number) {
+      //           return false;
+      //         }
+      //       }
+      //     }
+      //   }
+      // }
+      function resetGridBackgroundColor() {
+        for (let i = 0; i < sideLength; i++) {
+          for (let j = 0; j < sideLength; j++) {
+            userGrid[i][j].style.backgroundColor = "#ffffff";
+          }
+        }
+      }
+      function solveSudoku() {
+        const sudokuSolved = sudokuDFS();
+        if (!sudokuSolved) {
+          alert("sudoku has no solution");
+        }
+      }
+      function sudokuDFS() {
+        let y = -1;
+        let x = -1;
+        for (let i = 0; i < sideLength; i++) {
+          for (let j = 0; j < sideLength; j++) {
+            if (numberMatrix[i][j] === -1) {
+              y = i;
+              x = j;
+            }
+          }
+        }
+        if (x === -1 && y === -1) {
+          return true;
+        }
+
+        for (let k = 1; k <= sideLength; k++) {
+          const rowLegal = !checkRowContainsNumber(y, k);
+          const columnLegal = !checkColumnContainsNumber(x, k);
+          if (rowLegal && columnLegal) {
+            numberMatrix[y][x] = k;
+            if (sudokuDFS(numberMatrix)) {
+              return true;
+            }
+          }
+        }
+        numberMatrix[y][x] = -1;
+        return false;
+      }
+      function resetMatrix(value) {
+        for (let i = 0; i < sideLength; i++) {
+          for (let j = 0; j < sideLength; j++) {
+            numberMatrix[i][j] = value;
+          }
+        }
+      }
+      function initialiseGrid() {
+        for (let i = 0; i < sideLength; i++) {
+          const row = document.createElement("tr");
+          userGrid.push([]);
+          for (let index = 0; index < sideLength; index++) {
+            const square = document.createElement("td");
+            const textinput = document.createElement("input");
+            textinput.type = Number;
+            textinput.min = 1;
+            textinput.max = sideLength;
+
+            //make gaps between sections of grid
+            if (index % 3 === 0) {
+              textinput.style.marginLeft = gridSectionsGap + "px";
+            }
+            if (i % 3 === 0) {
+              textinput.style.marginTop = gridSectionsGap + "px";
+            }
+
+            textinput.className = "sudokuInput";
+            textinput.style.fontSize = squareLength + "px";
+            textinput.style.width = squareLength + "px";
+            textinput.style.height = squareLength + "px";
+
+            userGrid[i].push(textinput);
+            square.appendChild(textinput);
+            row.appendChild(square);
+          }
+          grid.appendChild(row);
+        }
+      }
+      function initialiseNumberMatrix(value) {
+        for (let i = 0; i < sideLength; i++) {
+          numberMatrix.push([]);
+          for (let j = 0; j < sideLength; j++) {
+            numberMatrix[i].push(value);
+          }
+        }
+      }
+      function mapNumberMatrixToUserGrid() {
+        for (let i = 0; i < sideLength; i++) {
+          for (let j = 0; j < sideLength; j++) {
+            if (numberMatrix[i][j] !== -1) {
+              userGrid[i][j].value = numberMatrix[i][j];
+            } else {
+              userGrid[i][j].value = "";
+            }
+          }
+        }
+      }
+      function mapUserGridValuesToNumberMatrix() {
+        for (let i = 0; i < sideLength; i++) {
+          for (let j = 0; j < sideLength; j++) {
+            numberMatrix[i][j] = userGrid[i][j].value;
+          }
+        }
+      }
+      function generateSudoku(numOfInitialNumbers) {
+        for (let i = 0; i < numOfInitialNumbers; i++) {
+          let validPlacement = false;
+          let x;
+          let y;
+          let value;
+          while (!validPlacement) {
+            x = Math.floor(Math.random() * sideLength);
+            y = Math.floor(Math.random() * sideLength);
+            value = Math.floor(Math.random() * sideLength) + 1;
+
+            validPlacement =
+              !checkColumnContainsNumber(x, value) &&
+              !checkRowContainsNumber(y, value) &&
+              numberMatrix[y][x] === -1;
+          }
+          //placement is valid so place the value in the position
+          numberMatrix[y][x] = value;
+        }
+      }
+      function checkRowContainsNumber(index, number) {
+        for (let i = 0; i < sideLength; i++) {
+          if (numberMatrix[index][i] === number) {
+            return true;
+          }
+        }
+        return false;
+      }
+      function checkColumnContainsNumber(index, number) {
+        for (let i = 0; i < sideLength; i++) {
+          if (numberMatrix[i][index] === number) {
+            return true;
+          }
+        }
+        return false;
+      }
+    </script>
+  </body>
+</html>

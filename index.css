@@ -1,0 +1,34 @@
+body {
+  text-align: center;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+}
+
+td {
+  padding: 0px;
+}
+#sudokuContainer {
+  border-collapse: collapse;
+  padding: 0px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.sudokuInput {
+  background-color: #ffffff;
+  border-radius: 4px;
+  text-align: center;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+}
+button {
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+  border: 2px solid;
+  border-radius: 6px;
+  margin: 5px;
+  font-size: 20px;
+}
+h1 {
+  font-size: 40px;
+  margin: 0px;
+}
