@@ -52,67 +52,6 @@
         solveSudoku();
         mapNumberMatrixToUserGrid();
       };
-      // submitSudokuButton.onclick = () => {
-      //   if (!checkForValidInputTypes()) {
-      //     alert("Invalid input type in soduku puzzle (not a digit)");
-      //     return;
-      //   }
-      //   //must map inputs onto number matrix !!!
-
-      //   const invalidRows = [];
-      //   const invalidColumns = [];
-
-      //   for (let i = 0; i < sideLength; i++) {
-      //     for (let j = 0; j < sideLength; j++) {
-      //       const rowValid = checkRowValid(i);
-      //       const columnValid = checkColumnValid(j);
-      //       if (!rowValid) {
-      //         invalidRows.push(i);
-      //       }
-      //       if (!columnValid) {
-      //         invalidColumns.push(j);
-      //       }
-      //     }
-      //   }
-      //   //finally check if soduku is valid
-      //   if (invalidColumns.length === 0 && invalidRows.length === 0) {
-      //     alert("sudoku is valid");
-      //   } else {
-      //     alert("sudoku is not valid");
-      //   }
-      //   function checkRowValid(row) {
-      //     const usedNumbers = [];
-      //     for (let i = 0; i < sideLength; i++) {
-      //       const currentNumber = numberMatrix[row][i];
-      //       if (usedNumbers.includes(currentNumber)) {
-      //         return false;
-      //       }
-      //       usedNumbers.push(currentNumber);
-      //     }
-      //     return true;
-      //   }
-      //   function checkColumnValid(column) {
-      //     const usedNumbers = [];
-      //     for (let i = 0; i < sideLength; i++) {
-      //       const currentNumber = numberMatrix[i][column];
-      //       if (usedNumbers.includes(currentNumber)) {
-      //         return false;
-      //       }
-      //       usedNumbers.push(currentNumber);
-      //     }
-      //     return true;
-      //   }
-
-      //   function checkForValidInputTypes() {
-      //     for (let i = 0; i < sideLength; i++) {
-      //       for (let j = 0; j < sideLength; j++) {
-      //         if (typeof userGrid[i][j].value != typeof number) {
-      //           return false;
-      //         }
-      //       }
-      //     }
-      //   }
-      // }
       function resetGridBackgroundColor() {
         for (let i = 0; i < sideLength; i++) {
           for (let j = 0; j < sideLength; j++) {
